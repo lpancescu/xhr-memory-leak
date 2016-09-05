@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>Memory Leak</title>
+    <script>
+	function refreshPart(id, url) {
+	  var f = function() {
+	    var request = new XMLHttpRequest();
+	    request.open("GET", url, true);
+	    request.onreadystatechange = function() {
+	      if (request.readyState === XMLHttpRequest.DONE
+		  && request.status === 0) {
+		resp = request.responseText;
+		hist = document.getElementById(id);
+		parent = hist.parentNode;
+		updated = document.createElement("pre");
+		updated.id = id;
+		updated.innerHTML = resp;
+		parent.replaceChild(updated, hist);
+	      }
+	      refreshPart(id, url);
+	    }
+	    request.send();
+	  }
+	  window.setTimeout(f, 5000);
+	}
+	
+	if (document.readyState != "loading") {
+	  refreshPart("updatable", "lorem.txt");
+	} else {
+	  document.addEventListener("DOMContentLoaded",
+	      function() { refreshPart("updatable", "lorem.txt"); });
+	}
+    </script>
+  </head>
+  <body>
+    <h1>Memory Leak</h1>
+    <p>Demonstrate the Jenkins memory leak by creating XMLHttpRequests in a recursive call from the timeout callback.</p>
+    <div><pre id="updatable">This text should be replaced after 5 seconds.</pre></div>
+  </body>
+</html>

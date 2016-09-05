@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>Memory Leak</title>
+    <script>
+	var lorem =
+"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin aliquam nulla\n"
++"ut neque varius, id placerat neque interdum. Aliquam eu sem odio. Nam enim\n"
++"orci, semper non tincidunt a, egestas sit amet augue. Aliquam tristique\n"
++"finibus tellus, posuere varius quam tincidunt a. Morbi aliquet tristique odio,\n"
++"a pellentesque mauris elementum ut. Nulla sit amet velit enim. Quisque nec\n"
++"rhoncus mauris. Vestibulum interdum ac felis id dictum. Nullam vehicula tempus\n"
++"neque sed vulputate. Vestibulum ante ipsum primis in faucibus orci luctus et\n"
++"ultrices posuere cubilia Curae;\n";
+	function refreshPart(id) {
+	  var f = function() {
+	    hist = document.getElementById(id);
+	    parent = hist.parentNode;
+	    updated = document.createElement("pre");
+	    updated.id = id;
+	    updated.innerHTML = lorem;
+	    parent.replaceChild(updated, hist);
+	    refreshPart(id);
+	  }
+	  window.setTimeout(f, 5000);
+	}
+	
+	if (document.readyState != "loading") {
+	  refreshPart("updatable");
+	} else {
+	  document.addEventListener("DOMContentLoaded",
+	      function() { refreshPart("updatable"); });
+	}
+    </script>
+  </head>
+  <body>
+    <h1>Memory Leak</h1>
+    <p>Demonstrate a memory leak by using timers with closures</p>
+    <div><pre id="updatable">a</pre></div>
+  </body>
+</html>

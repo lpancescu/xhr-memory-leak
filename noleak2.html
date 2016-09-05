@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>No Memory Leak</title>
+    <script>
+	function refreshPart(id, url) {
+	  var request = new XMLHttpRequest();
+	  var f = function() {
+	    request.open("GET", url, true);
+	    request.onreadystatechange = function() {
+	      if (request.readyState === XMLHttpRequest.DONE
+		  && request.status === 0) {
+		resp = request.responseText;
+		hist = document.getElementById(id);
+		parent = hist.parentNode;
+		updated = document.createElement("pre");
+		updated.id = id;
+		updated.innerHTML = resp;
+		parent.replaceChild(updated, hist);
+	      }
+	      window.setTimeout(f, 5000);
+	    }
+	    request.send();
+	  }
+	  window.setTimeout(f, 5000);
+	}
+	
+	if (document.readyState != "loading") {
+	  refreshPart("updatable", "lorem.txt");
+	} else {
+	  document.addEventListener("DOMContentLoaded",
+	      function() { refreshPart("updatable", "lorem.txt"); });
+	}
+    </script>
+  </head>
+  <body>
+    <h1>No Memory Leak</h1>
+    <p>Avoid a memory leak by creating just one XMLHttpRequest per resource.</p>
+    <div><pre id="updatable">This text should be replaced after 5 seconds.</pre></div>
+  </body>
+</html>
