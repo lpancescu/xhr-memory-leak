@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title>No Memory Leak (Prototype.js version)</title>
+    <script src="javascript/prototype.js"></script>
+    <script>
+	var pu = {};
+	function refreshPart(id, url) {
+	  pu[id] = new Ajax.PeriodicalUpdater(id, url, {
+	    method: "get",
+	    frequency: 5
+	  });
+	}
+	
+	document.observe("dom:loaded", function() {
+	  refreshPart("updatable", "lorem.txt");
+	});
+    </script>
+  </head>
+  <body>
+    <h1>Memory Leak</h1>
+    <p>Demonstrate the Jenkins memory leak by creating XMLHttpRequests in a recursive call from the timeout callback.</p>
+    <div><pre id="updatable">This text should be replaced after 5 seconds.</pre></div>
+  </body>
+</html>
