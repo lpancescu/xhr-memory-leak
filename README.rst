@@ -13,7 +13,7 @@ Firefox reached 2.95 GB after 48 hours, and its ``about:memory`` tool reported
 The Timeline tool from Google Chrome shows the number of listeners and nodes
 increasing every 5 seconds (for the nodes, it's a significant increase: it
 already reached hundreds of thousands of nodes within minutes), and they appear
-to never be garbage-collected). The stack trace corresponding to each of these
+to never be garbage-collected. The stack trace corresponding to each of these
 increases in the number of nodes points to the function ``refreshPart`` from
 ``hudson-behavior.js``.
 
@@ -42,6 +42,11 @@ a few minutes.
 The memory leak only appears when ``XMLHttpRequest`` is used (see ``lorem.html``
 for an example that is identical to ``leak.html``, except for using a hard-coded
 string as a replacement for the original content).
+
+The simplest solution would be to use the ``Ajax.PeriodicalUpdater`` class from
+Prototype.js, as illustrated by ``noleak-prototype.html``. Unfortunately, this
+isn't practical for a Jenkins fix, since the server returns the full ``div``
+with the id, not just its contents, as ``Ajax.PeriodicalUpdater`` requires.
 
 .. _Jenkins bug #10912: https://issues.jenkins-ci.org/browse/JENKINS-10912
 .. _Jenkins: https://jenkins.io
