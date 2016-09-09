@@ -8,7 +8,7 @@
 	    request.open("GET", url, true);
 	    request.onreadystatechange = function() {
 	      if (request.readyState === XMLHttpRequest.DONE
-		  && request.status === 0) {
+		  && request.status === 200) {
 		resp = request.responseText;
 		hist = document.getElementById(id);
 		parent = hist.parentNode;

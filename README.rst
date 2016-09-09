@@ -30,20 +30,24 @@ garbage-collected, and should only be created in limited numbers.
 A test case and possible solutions
 ==================================
 
-I wrote a self-contained ``refreshPart`` function, using just plain Javascript,
-without any external libraries, to illustrate the memory leak, as well as two
-working solutions: one by using ``window.setInterval`` instead of
-``window.setTimeout``, while the other moves the creation of the
-``XMLHttpRequest`` object outside of the ``f`` function.
+I wrote a self-contained ``refreshPart`` function to illustrate the memory
+leak, as well as two possible solutions for Jenkins:
+
+1. ``noleak-interval.html`` uses ``window.setInterval`` instead of
+   ``window.setTimeout``
+2. ``noleak-timeout.html`` reuses the same ``XMLHttpRequest`` object, created
+   outside of the ``f`` function
 
 The code uses AJAX to replace the contents of a ``pre`` with the contents of a
-file from the same directory. If you are loading the demo HTML files directly
-from your harddisk, you'll need to disable the same-origin restriction in
-browsers, otherwise the browser won't allow reading the ``lorem.txt`` file. For
-Chrome, you have to add ``--disable-web-security --user-data-dir`` to its
-command line. You can even open ``leak.html``, ``noleak.html`` and
-``noleak2.html`` in different tabs and use Chrome's Task Manager to monitor
-their memory usage for a few minutes.
+file from the same directory. If you have Python installed, you can use its
+included web server:
+
+* Python 2.x: ``python2 -m SimpleHTTPServer``
+* Python 3.x: ``python3 -m http.server --bind localhost``
+
+You can now open `leak.html`_, `noleak-timeout.html`_ and
+`noleak-interval.html`_ in different tabs and use Chrome's Task Manager to
+monitor their memory usage for a few minutes.
 
 The memory leak only appears when ``XMLHttpRequest`` is used (see
 ``noleak-noxhr.html`` for an example that is identical to ``leak.html``, except
@@ -52,8 +56,11 @@ for using a hard-coded string as a replacement for the original content).
 The simplest solution would be to use the ``Ajax.PeriodicalUpdater`` class from
 Prototype.js, as illustrated by ``noleak-prototype.html``. Unfortunately, this
 isn't practical for a Jenkins fix, since the server returns the full ``div``
-with the id, not just its contents, as ``Ajax.PeriodicalUpdater`` requires.
+with the id (not just its contents, as ``Ajax.PeriodicalUpdater`` requires).
 
 .. _Jenkins bug #10912: https://issues.jenkins-ci.org/browse/JENKINS-10912
 .. _Jenkins: https://jenkins.io
 .. _article: http://nullprogram.com/blog/2013/02/08/
+.. _leak.html: http://localhost:8000/leak.html
+.. _noleak-timeout.html: http://localhost:8000/noleak-timeout.html
+.. _noleak-interval.html: http://localhost:8000/noleak-interval.html
