@@ -46,8 +46,8 @@ command line. You can even open ``leak.html``, ``noleak.html`` and
 their memory usage for a few minutes.
 
 The memory leak only appears when ``XMLHttpRequest`` is used (see
-``lorem.html`` for an example that is identical to ``leak.html``, except for
-using a hard-coded string as a replacement for the original content).
+``noleak-noxhr.html`` for an example that is identical to ``leak.html``, except
+for using a hard-coded string as a replacement for the original content).
 
 The simplest solution would be to use the ``Ajax.PeriodicalUpdater`` class from
 Prototype.js, as illustrated by ``noleak-prototype.html``. Unfortunately, this
